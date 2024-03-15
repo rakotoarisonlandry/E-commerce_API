@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import AuthRouteAdmineRoute from "./routes/admin/AuthRouteAdmin.js";
+import AuthRouteUser from "./routes/client/AuthRouteUser.js"
 const app = express();
 dotenv.config();
 
@@ -9,7 +11,8 @@ app.use(express.json());
 
 // Middleware pour gérer les problèmes de CORS (Cross-Origin Resource Sharing)
 app.use(cors());
-// app.use("/api/users", userRoute);
+app.use("/admin", AuthRouteAdmineRoute);
+app.use("/user", AuthRouteUser);
 app.get("/", (req, res) => {
   res.send("Welcome to our E-commerce APIs");
 });
