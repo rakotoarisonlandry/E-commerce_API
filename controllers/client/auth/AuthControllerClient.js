@@ -26,10 +26,9 @@ export const register = (req, res) => {
     });
   });
 };
-
 export const login = (req, res) => {
-  const q = "SELECT * FROM user WHERE name=? AND firstName=?";
-  db.query(q, [req.body.name, req.body.firstName], (err, data) => {
+  const q = "SELECT * FROM user WHERE email=? AND firstName=?";
+  db.query(q, [req.body.email, req.body.firstName], (err, data) => {
     if (err) return res.json(err);
     if (data.length === 0) return res.status(404).json("User not found!");
 
@@ -41,7 +40,18 @@ export const login = (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json("Wrong password or username");
 
-    const token = jwt.sign({ id: data[0].id }, "jwtkey");
+    // Vérifier si l'identifiant de l'utilisateur est accessible
+    if (!data[0].IdUser) {
+      console.error("User id not found:", data[0]);
+      return res.status(500).json("User id not found!");
+    }
+
+    const token = jwt.sign({ id: data[0].IdUser }, "jwtkey");
+
+    // Debug: Log token and other data if needed
+    console.log("Generated token:", token);
+    console.log("Other user data:", data[0]);
+
     const { password, ...other } = data[0];
 
     res
