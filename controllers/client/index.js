@@ -1,7 +1,7 @@
 import { register,login,logout } from "./auth/AuthControllerClient.js";
 import { updateUser } from "./update/UpdateClient.js";
 import { getUser } from "./getUsers/GetUsers.js";
-import { addComment } from "./comment/comment.js";
+import { addComment,getAllComments} from "./comment/comment.js";
 export const AuthControllerClient = Object.freeze({
     register,
     login,
@@ -13,5 +13,6 @@ export const ControllerClient = Object.freeze({
 })
 
 export const ControllerCommentClient = Object.freeze({
-    addComment
+    addComment,
+    getAllComments
 })

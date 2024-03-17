@@ -14,4 +14,5 @@ router.put("/:IdUser", ControllerClient.updateUser)
 router.get("/", ControllerClient.getUser)
 //COMMENT
 router.post("/comment", ControllerCommentClient.addComment)
+router.get("/comment", ControllerCommentClient.getAllComments)
 export default router;
