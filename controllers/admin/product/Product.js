@@ -1,8 +1,6 @@
 import { db } from "../../../config/bd.js";
 
 export const addPro = (req, res) => {
-  // const token = req.cookies.access_token;
-  // if (!token) return res.status(401).json("Not authenticated!");
   const q = "SELECT * FROM product WHERE  img =? ";
   db.query(q, [req.body.img], (err, data) => {
     if (err) return res.json(err);
