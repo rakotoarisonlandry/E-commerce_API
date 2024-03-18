@@ -15,4 +15,5 @@ router.get("/", ControllerClient.getUser)
 //COMMENT
 router.post("/comment", ControllerCommentClient.addComment)
 router.get("/comment", ControllerCommentClient.getAllComments)
+router.get("/comment/:IdComment", ControllerCommentClient.getOneComment)
 export default router;

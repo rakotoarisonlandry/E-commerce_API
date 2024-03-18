@@ -15,9 +15,14 @@ export const addComment = (req, res) => {
     }
 
     const q =
-      "INSERT INTO comment (`montant`, `currentDate`, `IdUser`) VALUES (?)";
+      "INSERT INTO comment (`montant`, `currentDate`, `IdUser` , `Idpro`) VALUES (?)";
 
-    const values = [req.body.montant, req.body.currentDate, userInfo.id];
+    const values = [
+      req.body.montant,
+      req.body.currentDate,
+      userInfo.id,
+      req.body.IdPro,
+    ];
 
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
@@ -39,8 +44,12 @@ export const getAllComments = (req, res) => {
 
 export const getOneComment = (req, res) => {
   const q =
-    "SELECT p.id , `username` , `title` ,`desc`, p.img,u.img AS userImg ,`cat` , `date` FROM user u JOIN posts p ON u.id= p.userId WHERE p.id = ? ";
-  db.query(q, [req.params.id], (err, data) => {
+    "SELECT u.`name`, u.`firstName`, nt.`desc`, nt.`NomPro`, nt.`date`, u.`profile`, c.`currentDate` " +
+    "FROM user u " +
+    "JOIN comment c ON u.IdUser = c.IdUser " +
+    "JOIN product nt ON nt.IdPro = c.IdPro " +
+    "WHERE c.IdComment = ?";
+  db.query(q, [req.params.IdComment], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data[0]);
   });
