@@ -1,5 +1,7 @@
 import { db } from "../../../config/bd.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv"
+dotenv.config()
 export const addPro = (req, res) => {
   const q = "SELECT * FROM product WHERE img = ?";
   db.query(q, [req.body.img], (err, data) => {
@@ -32,14 +34,14 @@ export const addPro = (req, res) => {
         const transporter = nodemailer.createTransport({
           service: "Gmail",
           auth: {
-            user: "rakotorisonlandry@gmail.com",
-            pass: "mpea dxeb unhw iewy ",
+            user: process.env.user_GMail_App,
+            pass: process.env.GMAIL_APP_PASSWORD,
           },
         });
 
         const mailOptions = {
-          from: "rakotorisonlandry@gmail.com",
-          to: recipients.join(","), // Séparez les adresses par une virgule
+          from: process.env.user_GMail_App,
+          to: recipients.join(","),
           subject: "Nouveau produit disponible",
           text: "Bonjour, un nouveau produit est disponible. Venez le découvrir sur notre site : .aunion !",
         };

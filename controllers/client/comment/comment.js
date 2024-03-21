@@ -42,6 +42,7 @@ export const getAllComments = (req, res) => {
   });
 };
 
+//pour les historiques
 export const getOneComment = (req, res) => {
   const q =
     "SELECT u.`name`, u.`firstName`, nt.`desc`, nt.`NomPro`, nt.`date`, u.`profile`, c.`currentDate` " +
