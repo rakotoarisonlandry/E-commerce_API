@@ -22,7 +22,7 @@ export const addPro = (req, res) => {
 
     db.query(insertQuery, [values], async (err, data) => {
       if (err) return res.status(500).json(err);
-
+      
       // Récupérer les adresses e-mail des clients depuis la base de données
       const getCustomersEmailQuery = "SELECT email FROM user";
       db.query(getCustomersEmailQuery, (err, customers) => {

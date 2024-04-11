@@ -5,7 +5,7 @@ export const register =  (req,res) =>{
     const q = "SELECT * FROM admin WHERE email =? OR AdminName =?";
     db.query(q, [req.body.email, req.body.AdminName], (err, data) => {
       if (err) return res.json(err);
-      if (data.length) return res.status(409).json("admin  already exixts!");
+      if (data.length) return res.status(409).json("admin already exixts!");
   
       //Hash the password   and create a user
       const salt = bcrypt.genSaltSync(10);
@@ -22,8 +22,8 @@ export const register =  (req,res) =>{
 }
 
 export const login = (req,res) =>{
-  const q = "SELECT * FROM admin WHERE AdminName=?";
-  db.query(q, [req.body.AdminName], (err, data) => {
+  const q = "SELECT * FROM admin WHERE email=?";
+  db.query(q, [req.body.email], (err, data) => {
     if (err) return res.json(err);
     if (data.length === 0) return res.status(404).json("Admin Not found !");
 
