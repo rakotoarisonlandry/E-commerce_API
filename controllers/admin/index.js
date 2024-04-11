@@ -18,4 +18,4 @@ export const productController = Object.freeze({
   updatePro,
   getProd,
   getProds,
-});
+});   

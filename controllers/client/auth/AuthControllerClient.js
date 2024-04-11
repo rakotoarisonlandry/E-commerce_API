@@ -3,12 +3,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const register = (req, res) => {
   // Check if required fields are present in the request body
-  if (!req.body.email || !req.body.name || !req.body.firstName || !req.body.password || !req.body.profile) {
+  if (!req.body.email || !req.body.name || !req.body.userName || !req.body.numTelephone || !req.body.password || !req.body.profile) {
     return res.status(400).json("Missing required fields.");
   }
 
-  const q = "SELECT * FROM user WHERE email = ? OR (name = ? AND firstName = ?)";
-  db.query(q, [req.body.email, req.body.name, req.body.firstName], (err, data) => {
+  const q = "SELECT * FROM user WHERE email = ? OR (name = ? AND userName = ? AND numTelephone=?)";
+  db.query(q, [req.body.email, req.body.name, req.body.userName, req.body.numTelephone], (err, data) => {
     if (err) return res.json(err);
     if (data.length) return res.status(409).json("User already exists!");
 
@@ -17,8 +17,8 @@ export const register = (req, res) => {
     const hash = bcrypt.hashSync(req.body.password, salt);
 
     const insertQuery =
-      "INSERT INTO user(`name`, `firstName`, `email`, `password`, `profile`) VALUES (?)";
-    const values = [req.body.name, req.body.firstName, req.body.email, hash, req.body.profile];
+      "INSERT INTO user(`name`, `userName`, `email`, `password`, `profile`, `numTelephone`) VALUES (?)";
+    const values = [req.body.name, req.body.userName, req.body.email, hash, req.body.profile, req.body.numTelephone];
 
     db.query(insertQuery, [values], (err, data) => {
       if (err) return res.json(err);
@@ -27,8 +27,8 @@ export const register = (req, res) => {
   });
 };
 export const login = (req, res) => {
-  const q = "SELECT * FROM user WHERE email=? AND firstName=?";
-  db.query(q, [req.body.email, req.body.firstName], (err, data) => {
+  const q = "SELECT * FROM user WHERE email=?";
+  db.query(q, [req.body.email], (err, data) => {
     if (err) return res.json(err);
     if (data.length === 0) return res.status(404).json("User not found!");
 
@@ -67,8 +67,8 @@ export const logout = (req, res) => {
   res
     .clearCookie("access_token", {
       httpOnly: true,
-      sameSite: "None", // Utilisez "None" pour permettre l'envoi du cookie dans des contextes tiers
-      secure: true, // Assurez-vous que le cookie est envoyé uniquement via HTTPS
+      sameSite: "None", 
+      secure: true,
     })
     .status(200)
     .json("user has been logged out.");
