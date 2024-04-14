@@ -3,28 +3,47 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const register = (req, res) => {
   // Check if required fields are present in the request body
-  if (!req.body.email || !req.body.name || !req.body.userName || !req.body.numTelephone || !req.body.password || !req.body.profile) {
+  if (
+    !req.body.email ||
+    !req.body.name ||
+    !req.body.userName ||
+    !req.body.numTelephone ||
+    !req.body.password ||
+    !req.body.profile
+  ) {
     return res.status(400).json("Missing required fields.");
   }
 
-  const q = "SELECT * FROM user WHERE email = ? OR (name = ? AND userName = ? AND numTelephone=?)";
-  db.query(q, [req.body.email, req.body.name, req.body.userName, req.body.numTelephone], (err, data) => {
-    if (err) return res.json(err);
-    if (data.length) return res.status(409).json("User already exists!");
-
-    // Hash the password and create a user
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
-
-    const insertQuery =
-      "INSERT INTO user(`name`, `userName`, `email`, `password`, `profile`, `numTelephone`) VALUES (?)";
-    const values = [req.body.name, req.body.userName, req.body.email, hash, req.body.profile, req.body.numTelephone];
-
-    db.query(insertQuery, [values], (err, data) => {
+  const q =
+    "SELECT * FROM user WHERE email = ? OR (name = ? AND userName = ? AND numTelephone=?)";
+  db.query(
+    q,
+    [req.body.email, req.body.name, req.body.userName, req.body.numTelephone],
+    (err, data) => {
       if (err) return res.json(err);
-      return res.status(200).json("User has been created.");
-    });
-  });
+      if (data.length) return res.status(409).json("User already exists!");
+
+      // Hash the password and create a user
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.password, salt);
+
+      const insertQuery =
+        "INSERT INTO user(`name`, `userName`, `email`, `password`, `profile`, `numTelephone`) VALUES (?)";
+      const values = [
+        req.body.name,
+        req.body.userName,
+        req.body.email,
+        hash,
+        req.body.profile,
+        req.body.numTelephone,
+      ];
+
+      db.query(insertQuery, [values], (err, data) => {
+        if (err) return res.json(err);
+        return res.status(200).json("User has been created.");
+      });
+    }
+  );
 };
 export const login = (req, res) => {
   const q = "SELECT * FROM user WHERE email=?";
@@ -67,7 +86,7 @@ export const logout = (req, res) => {
   res
     .clearCookie("access_token", {
       httpOnly: true,
-      sameSite: "None", 
+      sameSite: "None",
       secure: true,
     })
     .status(200)
