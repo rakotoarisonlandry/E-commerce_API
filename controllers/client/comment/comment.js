@@ -24,9 +24,14 @@ export const addComment = (req, res) => {
       req.body.IdPro,
     ];
 
-    db.query(q, [values], (err, data) => {
+    db.query(q, [values], (err, data) => {  
       if (err) return res.status(500).json(err);
-      return res.json("comment has been created !");
+
+      const updatePro = "UPDATE product SET prixFinale = ? WHERE IdPro = ? AND ? > prixFinale"
+      db.query(updatePro, [req.body.montant, req.body.IdPro, req.body.montant], (updateErr, updateResult) => {
+        if (updateErr) return res.status(500).json(updateErr);
+        return res.json("Comment has been created and product price updated if necessary.");
+      });
     });
   });
 };
@@ -42,10 +47,10 @@ export const getAllComments = (req, res) => {
   });
 };
 
-//pour les historiques
+//pour les historiques dans l'admin
 export const getOneComment = (req, res) => {
   const q =
-    "SELECT u.`name`, u.`firstName`, nt.`desc`, nt.`NomPro`, nt.`date`, u.`profile`, c.`currentDate` " +
+    "SELECT u.`name`, u.`userName`,u.`numTelephone`, nt.`NomPro`,  nt.`desc`, nt.`date`, u.`profile`, c.`currentDate` " +
     "FROM user u " +
     "JOIN comment c ON u.IdUser = c.IdUser " +
     "JOIN product nt ON nt.IdPro = c.IdPro " +

@@ -1,6 +1,8 @@
 import { register, login, logout } from "./auth/AuthControllerClient.js";
 import { updateUser } from "./update/UpdateClient.js";
-import { getUser } from "./getUsers/GetUsers.js";
+import { getUsers } from "./getUsers/GetUsers.js";
+import { getUser } from "./getUsers/GetUser.js";
+import { updatePassword } from "./update/UpdatePassword.js";
 import {
   addComment,
   getAllComments,
@@ -13,7 +15,9 @@ export const AuthControllerClient = Object.freeze({
 });
 export const ControllerClient = Object.freeze({
   updateUser,
+  getUsers,
   getUser,
+  updatePassword
 });
 
 export const ControllerCommentClient = Object.freeze({

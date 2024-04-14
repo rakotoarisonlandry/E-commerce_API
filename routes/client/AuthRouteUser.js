@@ -18,7 +18,7 @@ router.post('/sendVerificationCode', sendVerificationCode)
 router.put("/:IdUser", ControllerClient.updateUser)
 router.get("/", ControllerClient.getUser)
 //COMMENT
-router.post("/comment", ControllerCommentClient.addComment)
-router.get("/comment", ControllerCommentClient.getAllComments)
-router.get("/comment/:IdComment", ControllerCommentClient.getOneComment)
+router.post("/comment", ControllerCommentClient.addComment);
+router.get("/comment", ControllerCommentClient.getAllComments);
+router.get("/comment/:IdComment", ControllerCommentClient.getOneComment);
 export default router;

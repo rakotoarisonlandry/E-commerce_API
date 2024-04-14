@@ -1,6 +1,6 @@
 import { db } from "../../../config/bd.js";
 
-export const getUser = (req, res) => {
+export const getUsers = (req, res) => {
   const q = req.query.IdUser
     ? "SELECT * FROM user WHERE IdUser=?"
     : "SELECT * FROM user";
