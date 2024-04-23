@@ -6,6 +6,7 @@ export const getUsers = (req, res) => {
     : "SELECT * FROM user";
   db.query(q, [req.query.IdUser], (err, data) => {
     if (err) return res.send(err);
+    console.log("user Data:", data);
     return res.status(200).json(data);
   });
 };

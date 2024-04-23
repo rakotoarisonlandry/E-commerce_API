@@ -17,7 +17,7 @@ export const ControllerClient = Object.freeze({
   updateUser,
   getUsers,
   getUser,
-  updatePassword
+  updatePassword,
 });
 
 export const ControllerCommentClient = Object.freeze({

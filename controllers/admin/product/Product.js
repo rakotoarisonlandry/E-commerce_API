@@ -1,7 +1,6 @@
 import { db } from "../../../config/bd.js";
+import { io } from "../../../config/socket.js";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
 export const addPro = (req, res) => {
   const q = "SELECT * FROM product WHERE img = ?";
   db.query(q, [req.body.img], (err, data) => {
@@ -23,12 +22,18 @@ export const addPro = (req, res) => {
     db.query(insertQuery, [values], async (err, data) => {
       if (err) return res.status(500).json(err);
 
+      // Envoi de la notification à tous les clients via Socket.IO
+      io.emit("newProductNotification", {
+        message:
+          "Un nouveau produit est disponible. Venez le découvrir sur notre site.",
+      });
+
       // Récupérer les adresses e-mail des clients depuis la base de données
       const getCustomersEmailQuery = "SELECT email FROM user";
       db.query(getCustomersEmailQuery, (err, customers) => {
         if (err) return res.status(500).json(err);
 
-        // Construire la liste de destinataires
+        // liste de destinataires
         const recipients = customers.map((customer) => customer.email);
         // Envoi d'e-mails simultanément
         const transporter = nodemailer.createTransport({
@@ -43,7 +48,7 @@ export const addPro = (req, res) => {
           from: "rakotorisonlandry@gmail.com",
           to: recipients.join(","),
           subject: "Nouveau produit disponible",
-          text: "Bonjour, un nouveau produit est disponible. Venez le découvrir sur notre site",
+          html: "<p>Bonjour ! Un nouveau produit est disponible. Venez le découvrir sur <a href='https://www.DotAuction.com'>notre site</a>.</p>",
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -66,8 +71,14 @@ export const getProds = (req, res) => {
   const q = req.query.IdPro
     ? "SELECT * FROM product WHERE IdPro=?"
     : "SELECT * FROM product";
-  db.query(q, [req.query.IdPro], (err, data) => {
-    if (err) return res.send(err);
+  const queryParams = req.query.IdPro ? [req.query.IdPro] : [];
+
+  db.query(q, queryParams, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.send(err);
+    }
+    console.log("Product data:", data);
     return res.status(200).json(data);
   });
 };
@@ -75,7 +86,11 @@ export const getProds = (req, res) => {
 export const getProd = (req, res) => {
   const q = "SELECT * FROM product WHERE IdPro=?";
   db.query(q, [req.params.IdPro], (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+    console.log("Product data:", data[0]); // Affichage des données dans la console
     return res.status(200).json(data[0]);
   });
 };

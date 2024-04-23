@@ -1,5 +1,6 @@
 import { db } from "../../../config/bd.js";
 import jwt from "jsonwebtoken";
+import { io } from "../../../config/socket.js";
 
 export const addComment = (req, res) => {
   const token = req.cookies.access_token;
@@ -24,14 +25,27 @@ export const addComment = (req, res) => {
       req.body.IdPro,
     ];
 
-    db.query(q, [values], (err, data) => {  
+    db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
 
-      const updatePro = "UPDATE product SET prixFinale = ? WHERE IdPro = ? AND ? > prixFinale"
-      db.query(updatePro, [req.body.montant, req.body.IdPro, req.body.montant], (updateErr, updateResult) => {
-        if (updateErr) return res.status(500).json(updateErr);
-        return res.json("Comment has been created and product price updated if necessary.");
-      });
+      const updatePro =
+        "UPDATE product SET prixFinale = ? WHERE IdPro = ? AND ? > prixFinale";
+      db.query(
+        updatePro,
+        [req.body.montant, req.body.IdPro, req.body.montant],
+        (updateErr, updateResult) => {
+          if (updateErr) return res.status(500).json(updateErr);
+
+          // Envoi de la notification à l'administrateur
+          io.emit("adminNotification", {
+            message: "Un nouveau commentaire a été ajouté à un produit.",
+          });
+
+          return res.json(
+            "Comment has been created and product price updated if necessary."
+          );
+        }
+      );
     });
   });
 };
