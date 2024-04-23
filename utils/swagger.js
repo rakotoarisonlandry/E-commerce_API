@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *    schemas:
- *      
+ *
  *      product:
  *         type: object
  *         required:
@@ -79,7 +79,7 @@
  *            currentDate: "2024-04-23T12:00:00Z"
  *            IdUser: 1
  *            IdPro: 1
- *      
+ *
  *      admin:
  *         type: object
  *         required:
@@ -240,7 +240,6 @@
  *         description: Erreur serveur lors de la mise à jour de l'administrateur
  */
 
-
 /**
  * @swagger
  * /user/comment:
@@ -307,7 +306,6 @@
  *       500:
  *         description: Erreur serveur lors de la récupération du commentaire
  */
-
 
 /**
  * @swagger
@@ -413,4 +411,3 @@
  *       500:
  *         description: Erreur serveur lors de la mise à jour du produit
  */
-
