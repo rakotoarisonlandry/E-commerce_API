@@ -4,7 +4,7 @@ Ce dépôt contient le code source de notre application E-commerce.
 
 ## Documentation de l'API
 
-Vous pouvez trouver la documentation de l' API [ici](http://localhost:5000/api-docs/).
+Vous pouvez trouver la documentation de l' API [http://localhost:5000/api-docs/](http://localhost:5000/api-docs/).
 
 La documentation de l'API vous permettra de comprendre les différentes routes disponibles, les paramètres acceptés et les réponses renvoyées par notre application.
 
